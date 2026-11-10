@@ -1,6 +1,6 @@
 # Local Router Live Demo (safe proof of concept)
 
-This is a **real local HTTP routing proof of concept**, not a production deployment. Start two worker processes (or run one worker on each test PC), then start the router. The router performs real HTTP health checks, round-robin node selection and failover; the worker executes only two allowlisted synthetic text tasks.
+This is a **real local HTTP routing proof of concept**, not a production deployment. Start two worker processes (or run one worker on each test PC), then start the router. The router performs real HTTP health checks, ranks healthy workers using best-effort CPU-load and available-memory telemetry, then attempts failover in rank order; the worker executes only two allowlisted synthetic text tasks.
 
 ## Requirements
 - Python 3.10+
@@ -59,8 +59,8 @@ python -m unittest -v  # live HTTP routing, auth, replay guard, SQLite registry
 ```
 
 ## What this proves — and does not prove
-- Proves local HTTP request/response between a router and worker, health checks, simple round-robin selection, failover attempts, and bearer-token gating.
-- Does **not** prove PC1–PC5 production security, mTLS, durable replay protection, hardware-aware scheduling, GPU/CPU benchmarking, offline resilience, high availability, or a validated school deployment.
+- Proves local HTTP request/response between a router and worker, health checks, resource-aware worker ranking using reported CPU load and available memory, failover attempts, and bearer-token gating.
+- The scheduler is a basic heuristic, not a workload benchmark or capacity guarantee. It uses host load average where available and OS-reported available memory; missing telemetry receives neutral fallback values. Windows may not expose load-average telemetry through this standard-library implementation.\n- Does **not** prove PC1–PC5 production security, mTLS, per-device identity, GPU scheduling, model inference, offline resilience, high availability, or a validated school deployment.
 
 
 ## Measure observed router latency
@@ -105,3 +105,16 @@ curl http://127.0.0.1:8100/nodes -H "Authorization: Bearer replace-with-a-long-r
 ```
 
 Static `SSE_NODES` entries remain supported. Dynamic enrollment is an operator-authenticated demo mechanism, not cryptographic device identity: shared-token enrollment, mTLS, per-device credentials, revocation, heartbeat expiry, capability attestation, and hardened authorization are still future work.
+
+
+## Resource-aware scheduling (demo heuristic)
+
+Each worker's `/health` response reports best-effort logical CPU count, one-minute load average/load per logical CPU (where the OS exposes it), and available/total physical memory where available. The router ranks only healthy workers that advertise the requested task capability. A lower score is preferred:
+
+- 70% CPU pressure (normalized load per logical CPU).
+- 30% memory pressure (one minus available-memory ratio).
+- Missing telemetry uses a neutral fallback instead of being treated as zero load.
+
+The selected worker and its score/telemetry are returned in the `/route` response; `/health` also shows worker telemetry. This is a transparent first scheduling heuristic, not a hardware benchmark, GPU detector, admission-control system, or production scheduler. It does not measure per-process resource use and can be affected by unrelated workloads on the host.
+
+Replay protection accepts an ID before attempting worker dispatch. Therefore, a request that later fails due to worker unavailability cannot be retried with the same ID; create a new unique ID for a new logical attempt. Accepted IDs currently have no expiry or cleanup policy, so the demo database can grow over time.
