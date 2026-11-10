@@ -63,9 +63,12 @@ These are design goals, not measured outcomes. No cost savings, speed improvemen
 The V3 engineering work is consolidating foundations and prototypes. It is **not yet a complete production-ready school application**. Authenticated PC1-to-PC5 execution, validated multi-device deployment, complete application acceptance, production LAN deployment, and reproducible performance benchmarks remain work to complete.
 
 
-## Interactive concept demo
+## Investor website and interactive concept demo
 
-Open the [interactive investor walkthrough](demo/index.html) to explore the intended PC1–PC5 topology and sample routing explanations. **This is a simulated front-end concept, not a live system connection or production demonstration.**
+- **Investor landing page:** [Open the website](https://abdallah-rashad-ict.github.io/SchoolSmartEYE-Investor-Showcase/) (available after GitHub Pages deployment is enabled and succeeds).
+- **Interactive walkthrough source:** [Open demo/index.html](demo/index.html) to explore the intended PC1–PC5 topology and sample routing explanations.
+
+**The walkthrough is a simulated front-end concept, not a live system connection or production demonstration.**
 
 ## Investor review materials
 
