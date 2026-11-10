@@ -24,10 +24,11 @@ class LiveRouterSmokeTest(unittest.TestCase):
                     try:
                         with urlopen("http://127.0.0.1:18100/health",timeout=.2) as health_response:
                             health=json.loads(health_response.read())
-                            ready=True
-                            break
+                            ready=bool(health.get("nodes")) and health["nodes"][0].get("healthy") is True
+                            if ready:
+                                break
                     except Exception: time.sleep(.1)
-                self.assertTrue(ready,"router did not become healthy")
+                self.assertTrue(ready,"router and worker did not become healthy")
                 self.assertEqual(health["scheduler"],"cpu_memory_best_effort")
                 self.assertIn("metrics",health["nodes"][0])
                 request_id=str(uuid.uuid4())
