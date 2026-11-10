@@ -70,6 +70,10 @@ The V3 engineering work is consolidating foundations and prototypes. It is **not
 
 **The walkthrough is a simulated front-end concept, not a live system connection or production demonstration.**
 
+## Run the local router proof of concept
+
+A runnable Python proof of concept is available in [`local-router-demo/`](local-router-demo/README.md). It uses real local HTTP requests between a router and allowlisted workers, with health checks and failover attempts. It is **not** a production PC1–PC5 deployment; read the security limitations and run instructions before testing. The demo accepts synthetic text only.
+
 ## Investor review materials
 
 - [Investor overview](docs/INVESTOR_OVERVIEW.md)
