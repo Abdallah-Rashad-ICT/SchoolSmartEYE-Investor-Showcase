@@ -60,7 +60,8 @@ python -m unittest -v  # live HTTP routing, auth, replay guard, SQLite registry
 
 ## What this proves — and does not prove
 - Proves local HTTP request/response between a router and worker, health checks, resource-aware worker ranking using reported CPU load and available memory, failover attempts, and bearer-token gating.
-- The scheduler is a basic heuristic, not a workload benchmark or capacity guarantee. It uses host load average where available and OS-reported available memory; missing telemetry receives neutral fallback values. Windows may not expose load-average telemetry through this standard-library implementation.\n- Does **not** prove PC1–PC5 production security, mTLS, per-device identity, GPU scheduling, model inference, offline resilience, high availability, or a validated school deployment.
+- The scheduler is a basic heuristic, not a workload benchmark or capacity guarantee. It uses host load average where available and OS-reported available memory; missing telemetry receives neutral fallback values. Windows may not expose load-average telemetry through this standard-library implementation.
+- Does **not** prove PC1–PC5 production security, mTLS, per-device identity, GPU scheduling, model inference, offline resilience, high availability, or a validated school deployment.
 
 
 ## Measure observed router latency
