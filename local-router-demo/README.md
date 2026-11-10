@@ -48,7 +48,7 @@ Route a synthetic task:
 curl -X POST http://127.0.0.1:8100/route \
   -H "Authorization: Bearer replace-with-a-long-random-demo-token" \
   -H "Content-Type: application/json" \
-  -d '{"task":"text_stats","text":"SchoolSmartEYE local AI demo"}'
+  -d '{"task":"text_stats","text":"SchoolSmartEYE local AI demo","request_id":"demo-request-0001"}'
 ```
 
 Allowed tasks: `echo`, `text_stats`. No arbitrary shell, Python, model execution, camera access, or student data processing is provided.
