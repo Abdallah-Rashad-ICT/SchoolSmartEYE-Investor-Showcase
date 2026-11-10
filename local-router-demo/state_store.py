@@ -3,17 +3,28 @@ import json
 import os
 import sqlite3
 import time
+from contextlib import contextmanager
 
 
 class SQLiteStateStore:
     def __init__(self, path=None):
-        self.path = path or os.environ.get("SSE_STATE_DB", "schoolsmarteye-demo-state.sqlite3")
+        self.path = path or os.environ.get(
+            "SSE_STATE_DB", "schoolsmarteye-demo-state.sqlite3"
+        )
         self._initialize()
 
-    def _connect(self):
-        connection = sqlite3.connect(self.path, timeout=10)
-        connection.execute("PRAGMA busy_timeout=10000")
-        return connection
+    @contextmanager
+    def _connection(self):
+        db = sqlite3.connect(self.path, timeout=10)
+        db.execute("PRAGMA busy_timeout=10000")
+        try:
+            yield db
+            db.commit()
+        except Exception:
+            db.rollback()
+            raise
+        finally:
+            db.close()
 
     def _initialize(self):
         with self._connection() as db:
@@ -34,7 +45,7 @@ class SQLiteStateStore:
             """)
 
     def register_node(self, node_id, url, capabilities):
-        with self._connect() as db:
+        with self._connection() as db:
             db.execute(
                 """INSERT INTO nodes(node_id,url,capabilities_json,last_seen)
                    VALUES(?,?,?,?)
@@ -46,22 +57,28 @@ class SQLiteStateStore:
             )
 
     def list_nodes(self):
-        with self._connect() as db:
+        with self._connection() as db:
             rows = db.execute(
-                "SELECT node_id,url,capabilities_json,last_seen FROM nodes ORDER BY node_id"
+                "SELECT node_id,url,capabilities_json,last_seen "
+                "FROM nodes ORDER BY node_id"
             ).fetchall()
         return [
-            {"node_id": row[0], "url": row[1],
-             "capabilities": json.loads(row[2]), "last_seen": row[3]}
+            {
+                "node_id": row[0],
+                "url": row[1],
+                "capabilities": json.loads(row[2]),
+                "last_seen": row[3],
+            }
             for row in rows
         ]
 
     def claim_request(self, request_id):
         """Atomically accept an ID once; returns False for every replay."""
         try:
-            with self._connect() as db:
+            with self._connection() as db:
                 db.execute(
-                    "INSERT INTO accepted_requests(request_id,accepted_at) VALUES(?,?)",
+                    "INSERT INTO accepted_requests(request_id,accepted_at) "
+                    "VALUES(?,?)",
                     (request_id, time.time()),
                 )
             return True
