@@ -55,7 +55,7 @@ Allowed tasks: `echo`, `text_stats`. No arbitrary shell, Python, model execution
 
 ## Test
 ```bash
-python -m unittest -v
+python -m unittest -v  # live HTTP routing, auth, replay guard, SQLite registry
 ```
 
 ## What this proves — and does not prove
