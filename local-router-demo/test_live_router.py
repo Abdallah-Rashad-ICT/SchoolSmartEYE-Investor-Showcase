@@ -40,6 +40,20 @@ class LiveRouterSmokeTest(unittest.TestCase):
                 bad=Request("http://127.0.0.1:18100/route",data=b'{"task":"echo","text":"x","request_id":"unauth-123"}',headers={"Content-Type":"application/json"})
                 with self.assertRaises(HTTPError) as err: urlopen(bad)
                 self.assertEqual(err.exception.code,401)
+
+                registration={"node_id":"TEST-PC-ENROLLED","url":"http://192.168.1.55:8101","capabilities":["text_stats"]}
+                enroll=Request("http://127.0.0.1:18100/register",data=json.dumps(registration).encode(),headers={"Content-Type":"application/json","Authorization":"Bearer "+token})
+                with urlopen(enroll,timeout=3) as response:
+                    self.assertEqual(response.status,201)
+                nodes=Request("http://127.0.0.1:18100/nodes",headers={"Authorization":"Bearer "+token})
+                with urlopen(nodes,timeout=3) as response:
+                    registered=json.loads(response.read())["nodes"]
+                self.assertIn("TEST-PC-ENROLLED",[node["node_id"] for node in registered])
+
+                unsafe={"node_id":"EXTERNAL","url":"http://example.com:8101","capabilities":["echo"]}
+                rejected=Request("http://127.0.0.1:18100/register",data=json.dumps(unsafe).encode(),headers={"Content-Type":"application/json","Authorization":"Bearer "+token})
+                with self.assertRaises(HTTPError) as err: urlopen(rejected)
+                self.assertEqual(err.exception.code,400)
             finally:
                 router.terminate(); worker.terminate()
                 router.wait(timeout=3); worker.wait(timeout=3)
