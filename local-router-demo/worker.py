@@ -1,7 +1,6 @@
 """Safe demo worker with basic, best-effort host resource telemetry."""
 import json
 import os
-import shutil
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from time import perf_counter
 
