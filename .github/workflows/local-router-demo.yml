@@ -24,6 +24,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Run local router end-to-end tests
+      - name: Run local router end-to-end and SQLite tests
         working-directory: local-router-demo
         run: python -m unittest -v
