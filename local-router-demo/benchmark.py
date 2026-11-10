@@ -38,7 +38,7 @@ def main():
         parser.error("--text must be at most 8000 characters")
 
     token = os.environ.get("SSE_DEMO_TOKEN", "local-demo-change-me")
-    payload = json.dumps({"task": "text_stats", "text": args.text}).encode()
+    payload = json.dumps({"task": "text_stats", "text": args.text, "request_id": str(uuid.uuid4())}).encode()
     samples = []
     failures = []
     total = args.warmup + args.requests
