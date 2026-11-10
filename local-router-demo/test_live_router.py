@@ -27,7 +27,9 @@ class LiveRouterSmokeTest(unittest.TestCase):
                             ready=bool(health.get("nodes")) and health["nodes"][0].get("healthy") is True
                             if ready:
                                 break
-                    except Exception: time.sleep(.1)
+                            time.sleep(.1)
+                    except Exception:
+                        time.sleep(.1)
                 self.assertTrue(ready,"router and worker did not become healthy")
                 self.assertEqual(health["scheduler"],"cpu_memory_best_effort")
                 self.assertIn("metrics",health["nodes"][0])
