@@ -22,15 +22,25 @@ class LiveRouterSmokeTest(unittest.TestCase):
                 ready=False
                 for _ in range(50):
                     try:
-                        with urlopen("http://127.0.0.1:18100/health",timeout=.2): ready=True; break
-                    except Exception: time.sleep(.1)
-                self.assertTrue(ready,"router did not become healthy")
+                        with urlopen("http://127.0.0.1:18100/health",timeout=.2) as health_response:
+                            health=json.loads(health_response.read())
+                            ready=bool(health.get("nodes")) and health["nodes"][0].get("healthy") is True
+                            if ready:
+                                break
+                            time.sleep(.1)
+                    except Exception:
+                        time.sleep(.1)
+                self.assertTrue(ready,"router and worker did not become healthy")
+                self.assertEqual(health["scheduler"],"cpu_memory_best_effort")
+                self.assertIn("metrics",health["nodes"][0])
                 request_id=str(uuid.uuid4())
                 payload={"task":"text_stats","text":"hello school AI","request_id":request_id}
                 req=Request("http://127.0.0.1:18100/route",data=json.dumps(payload).encode(),headers={"Content-Type":"application/json","Authorization":"Bearer "+token})
                 with urlopen(req,timeout=3) as response: result=json.loads(response.read())
                 self.assertEqual(result["status"],"completed")
                 self.assertEqual(result["selected_node"],"TEST-PC")
+                self.assertEqual(result["scheduler"],"cpu_memory_best_effort")
+                self.assertIn("resource_score",result)
                 self.assertEqual(result["worker_result"]["result"]["words"],3)
 
                 replay=Request("http://127.0.0.1:18100/route",data=json.dumps(payload).encode(),headers={"Content-Type":"application/json","Authorization":"Bearer "+token})
