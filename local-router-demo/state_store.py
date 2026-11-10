@@ -16,7 +16,7 @@ class SQLiteStateStore:
         return connection
 
     def _initialize(self):
-        with self._connect() as db:
+        with self._connection() as db:
             db.execute("PRAGMA journal_mode=WAL")
             db.execute("""
                 CREATE TABLE IF NOT EXISTS nodes (
