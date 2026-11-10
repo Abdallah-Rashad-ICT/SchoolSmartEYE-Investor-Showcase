@@ -22,7 +22,12 @@ class LiveRouterSmokeTest(unittest.TestCase):
                 ready=False
                 for _ in range(50):
                     try:
-                        with urlopen("http://127.0.0.1:18100/health",timeout=.2) as health_response:\n                            health=json.loads(health_response.read())\n                            ready=True\n                            self.assertEqual(health["scheduler"],"cpu_memory_best_effort")\n                            self.assertIn("metrics",health["nodes"][0])\n                            break
+                        with urlopen("http://127.0.0.1:18100/health",timeout=.2) as health_response:
+                            health=json.loads(health_response.read())
+                            ready=True
+                            self.assertEqual(health["scheduler"],"cpu_memory_best_effort")
+                            self.assertIn("metrics",health["nodes"][0])
+                            break
                     except Exception: time.sleep(.1)
                 self.assertTrue(ready,"router did not become healthy")
                 request_id=str(uuid.uuid4())
@@ -30,7 +35,9 @@ class LiveRouterSmokeTest(unittest.TestCase):
                 req=Request("http://127.0.0.1:18100/route",data=json.dumps(payload).encode(),headers={"Content-Type":"application/json","Authorization":"Bearer "+token})
                 with urlopen(req,timeout=3) as response: result=json.loads(response.read())
                 self.assertEqual(result["status"],"completed")
-                self.assertEqual(result["selected_node"],"TEST-PC")\n                self.assertEqual(result["scheduler"],"cpu_memory_best_effort")\n                self.assertIn("resource_score",result)
+                self.assertEqual(result["selected_node"],"TEST-PC")
+                self.assertEqual(result["scheduler"],"cpu_memory_best_effort")
+                self.assertIn("resource_score",result)
                 self.assertEqual(result["worker_result"]["result"]["words"],3)
 
                 replay=Request("http://127.0.0.1:18100/route",data=json.dumps(payload).encode(),headers={"Content-Type":"application/json","Authorization":"Bearer "+token})
