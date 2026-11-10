@@ -23,24 +23,24 @@ def resource_metrics():
     memory_total = None
     memory_available = None
     try:
-        if os.name == "posix":
-            page_size = os.sysconf("SC_PAGE_SIZE")
-            memory_total = os.sysconf("SC_PHYS_PAGES") * page_size
-            memory_available = os.sysconf("SC_AVPHYS_PAGES") * page_size
-    except (ValueError, OSError, AttributeError):
+        with open("/proc/meminfo", encoding="ascii") as source:
+            values = {}
+            for line in source:
+                key, value = line.split(":", 1)
+                if key in ("MemTotal", "MemAvailable"):
+                    values[key] = int(value.strip().split()[0]) * 1024
+            memory_total = values.get("MemTotal")
+            memory_available = values.get("MemAvailable")
+    except (OSError, ValueError, KeyError):
         pass
 
     if memory_total is None or memory_available is None:
         try:
-            with open("/proc/meminfo", encoding="ascii") as source:
-                values = {}
-                for line in source:
-                    key, value = line.split(":", 1)
-                    if key in ("MemTotal", "MemAvailable"):
-                        values[key] = int(value.strip().split()[0]) * 1024
-                memory_total = values.get("MemTotal")
-                memory_available = values.get("MemAvailable")
-        except (OSError, ValueError, KeyError):
+            if os.name == "posix":
+                page_size = os.sysconf("SC_PAGE_SIZE")
+                memory_total = os.sysconf("SC_PHYS_PAGES") * page_size
+                memory_available = os.sysconf("SC_AVPHYS_PAGES") * page_size
+        except (ValueError, OSError, AttributeError):
             pass
 
     return {
