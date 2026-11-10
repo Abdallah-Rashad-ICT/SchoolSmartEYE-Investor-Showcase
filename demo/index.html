@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SchoolSmartEYE AI | Interactive Concept Demo</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#131c31;--line:#293653;--muted:#9eacc5;--ink:#f4f7ff;--accent:#7c9cff;--green:#53d6a0;--amber:#f4c66a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b2b50 0,#0b1020 55%);color:var(--ink);font:16px/1.55 system-ui,Segoe UI,sans-serif}
+main{max-width:1120px;margin:auto;padding:36px 20px 70px}.top{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}.tag{border:1px solid #5670a6;border-radius:999px;padding:5px 11px;color:#cbd8ff;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+h1{font-size:clamp(34px,6vw,58px);line-height:1.05;margin:34px 0 12px;max-width:850px}h1 span{color:#9bb4ff}.lead{color:var(--muted);max-width:780px;font-size:18px}
+.notice{margin:26px 0;padding:14px 17px;border:1px solid #846a35;background:#352b17;border-radius:14px;color:#ffe4a6}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:22px 0}.card{background:linear-gradient(150deg,#182541,#111a2e);border:1px solid var(--line);border-radius:18px;padding:18px}.card h3{margin:0 0 7px}.muted{color:var(--muted);font-size:14px}.status{display:inline-block;font-size:11px;border-radius:20px;padding:3px 8px;margin-top:10px;background:#263653;color:#c8d7ff}.status.amber{background:#463719;color:#ffe2a1}.status.green{background:#143e35;color:#a5f4d6}
+h2{margin-top:42px}.network{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin:18px 0}.node{border:1px solid #43577e;background:#17233c;border-radius:14px;padding:15px;text-align:center}.node strong{display:block;font-size:18px}.node small{color:var(--muted)}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}button{background:#7897ff;color:#071126;border:0;border-radius:10px;padding:11px 16px;font-weight:700;cursor:pointer}button.secondary{background:#263653;color:#e7edff}.output{min-height:88px;white-space:pre-line}.foot{margin-top:42px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:18px}a{color:#b6c8ff}
+</style></head>
+<body><main>
+<div class="top"><strong>SchoolSmartEYE AI</strong><span class="tag">Investor concept walkthrough</span></div>
+<h1>School intelligence, <span>closer to the school.</span></h1>
+<p class="lead">A local-first intelligent-school ecosystem concept: coordinate suitable AI workloads across school computers, connect approved school knowledge, and research carefully governed safety-support capabilities.</p>
+<div class="notice"><strong>Important:</strong> This is an illustrative, front-end concept demo. The node activity and task routing below are simulated interactions—not a live connection to school devices, models, cameras, wearables, or production services.</div>
+<h2>Distributed local architecture</h2>
+<p class="muted">Intended topology for an initial one-school deployment. Device roles are illustrative and subject to hardware, security, and operational validation.</p>
+<div class="network">
+<div class="node"><strong>PC1</strong><small>School Core<br>App & policy</small><span class="status">Target role</span></div>
+<div class="node"><strong>PC2</strong><small>Optional worker</small><span class="status">Not enrolled</span></div>
+<div class="node"><strong>PC3</strong><small>Optional worker</small><span class="status">Not enrolled</span></div>
+<div class="node"><strong>PC4</strong><small>Optional worker</small><span class="status">Not enrolled</span></div>
+<div class="node"><strong>PC5</strong><small>Local AI services</small><span class="status amber">Candidate role</span></div>
+</div>
+<h2>Try the routing concept</h2>
+<p class="muted">Select a sample workload to see an illustrative routing decision. No device is contacted.</p>
+<div class="controls"><button onclick="route('document')">School document Q&A</button><button onclick="route('vision')">Vision analysis</button><button onclick="route('forecast')">Risk signal analysis</button><button class="secondary" onclick="resetDemo()">Reset</button></div>
+<div class="card output" id="output" aria-live="polite">Choose a sample workload to view a simulated routing explanation.</div>
+<h2>Capability maturity</h2>
+<div class="grid">
+<div class="card"><h3>Educational AI & RAG</h3><p class="muted">Knowledge assistance grounded in approved school documents.</p><span class="status amber">Candidate / experimental</span></div>
+<div class="card"><h3>Computer Vision</h3><p class="muted">Preserved experimental engine currently measures luminance changes in image regions.</p><span class="status amber">Experimental</span></div>
+<div class="card"><h3>Predictive risk intelligence</h3><p class="muted">Research direction for cautious indicators that always require human review.</p><span class="status">Research direction</span></div>
+<div class="card"><h3>Smart wearable</h3><p class="muted">Potential opt-in pathway; integration is blocked pending redesign and governance.</p><span class="status amber">Blocked</span></div>
+</div>
+<h2>What must be proven next</h2>
+<div class="grid">
+<div class="card"><h3>1 · Secure execution</h3><p class="muted">Authenticated PC1-to-worker execution, enrollment, authorization, and replay protection.</p></div>
+<div class="card"><h3>2 · Hardware evidence</h3><p class="muted">Repeatable latency, resource, reliability, and cost benchmarks on ordinary school computers.</p></div>
+<div class="card"><h3>3 · One-school pilot</h3><p class="muted">Approved sample workflows, privacy review, staff feedback, and measured acceptance criteria.</p></div>
+</div>
+<p class="foot">Responsible AI note: use synthetic data in demonstrations. No facial recognition, emotion inference, attention scoring, or automated disciplinary decisions are presented as product capabilities. Safety-related outputs must remain advisory and human-reviewed. This concept demo does not establish production readiness, performance, cost savings, or validated incident prediction.</p>
+<p><a href="../">← Back to investor showcase</a></p>
+</main>
+<script>
+const out=document.getElementById('output');
+function route(kind){
+ const messages={
+ document:"SIMULATED ROUTE\nWorkload: approved-document question answering\nIllustrative destination: PC5 local AI services\nPolicy gate: verify user role, school scope, and document approval before execution.\nExecution status: not connected; no model was run.",
+ vision:"SIMULATED ROUTE\nWorkload: experimental visual signal processing\nIllustrative destination: an enrolled local worker, if available\nPolicy gate: authorized camera source, purpose limitation, and human review.\nExecution status: not connected; no image was analyzed.",
+ forecast:"SIMULATED ROUTE\nWorkload: research-only risk indicator analysis\nIllustrative destination: approved local analytics service\nPolicy gate: validated inputs, privacy review, and human oversight.\nExecution status: not connected; no prediction was generated."
+ };
+ out.textContent=messages[kind];
+}
+function resetDemo(){out.textContent="Choose a sample workload to view a simulated routing explanation."}
+</script></body></html>
