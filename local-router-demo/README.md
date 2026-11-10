@@ -61,3 +61,23 @@ python -m unittest -v
 ## What this proves — and does not prove
 - Proves local HTTP request/response between a router and worker, health checks, simple round-robin selection, failover attempts, and bearer-token gating.
 - Does **not** prove PC1–PC5 production security, mTLS, durable replay protection, hardware-aware scheduling, GPU/CPU benchmarking, offline resilience, high availability, or a validated school deployment.
+
+
+## Measure observed router latency
+
+After starting the router and workers, run this from the client machine:
+
+```bash
+# Set the same token used by the router and workers
+export SSE_DEMO_TOKEN="replace-with-a-long-random-demo-token"
+python benchmark.py --url http://127.0.0.1:8100/route --warmup 5 --requests 50
+```
+
+On Windows PowerShell:
+
+```powershell
+$env:SSE_DEMO_TOKEN = "replace-with-a-long-random-demo-token"
+python benchmark.py --url http://127.0.0.1:8100/route --warmup 5 --requests 50
+```
+
+The JSON report includes OS/Python/CPU-count metadata, successful and failed requests, observed round-trip min/mean/p50/p95/max latency, and observed requests per second. Save reports from each test PC and compare them under the same workload and network conditions. This script does not measure CPU/RAM utilization, GPU utilization, power, or model inference; do not present its results as those measurements or as a production guarantee. A run with any failed request exits non-zero.
